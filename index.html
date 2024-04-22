@@ -14,28 +14,70 @@
   <script type="text/babel">
     const container = document.getElementById('root');
     const root = ReactDOM.createRoot(container);
-    root.render(<App images={images} visibleItems={visibleItems} finishedItems={finishedItems}/>);
+    root.render(<App images={images} />);
 
-    function App({images = [], visibleItems = [], finishedItems = []}) {
+    function App({images = []}) {
+      const [stepsCount, setStepsCount] = React.useState(0);
+      const countSteps = () => {
+        setStepsCount((step) => step + 1);
+        console.log('stepCount ', stepsCount);
+      }
+
       return (
         <section className="game container">
-          <CardsList images={images} visibleItems={visibleItems} finishedItems={finishedItems}/>
+          <div className="steps">Шаг {stepsCount}</div>
+          <CardsList 
+            images={images} 
+            countSteps={countSteps} 
+          />
         </section>
       )
     }
 
-    function CardsList({images, visibleItems, finishedItems}) {
+    function CardsList({images, countSteps}) {
+      const [visibleCards, setVisibleCards] = React.useState([]);
+      const [finishedCards, setFinishedCards] = React.useState([]);
+
+      const handleCardClick = (id) => {
+        if (visibleCards.includes(id) || finishedCards.includes(id)) {
+          return;
+        }
+
+        countSteps();
+        setVisibleCards((cards) => [...cards, id]);
+      }
+      
       return (
         <ul className="cards cards-theme-cars">
-          {images.map(image => <Card key={image.id} url={image.url} description={image.description} isVisible={visibleItems.includes(image.id)} isFinished={finishedItems.includes(image.id)}/>)}
+          {images.map(image => 
+            <Card 
+              key={image.id} 
+              id={image.id}
+              url={image.url} 
+              description={image.description} 
+              isVisible={visibleCards.includes(image.id)} 
+              isFinished={finishedCards.includes(image.id)}
+              onCardClick={handleCardClick}
+            />)}
         </ul>
       )
     }
 
-    function Card({id, url, description, isVisible, isFinished}) {
+    function Card({id, url, description, isVisible, isFinished, onCardClick}) {
+      const handleClick = () => {
+        onCardClick(id);
+      }
+
       return (
-        <li className={`card ${isVisible ? 'card-show' : ''} ${isFinished ? 'card-finished' : ''}`}>
-          <img src={url} width="204" height="144" alt={description} />
+        <li 
+          className={`card ${isVisible ? 'card-show' : ''} ${isFinished ? 'card-finished' : ''}`}
+          onClick={handleClick}
+        >
+          <img 
+            src={url} 
+            width="204" height="144" 
+            alt={description} 
+          />
         </li>
       );
     }
