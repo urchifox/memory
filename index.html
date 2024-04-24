@@ -4,18 +4,18 @@
   <meta charset="UTF-8">
   <title>Игра Мемори</title>
   <link rel="stylesheet" href="css/style.css">
-  <script src="./vendor/react.development.js"></script>
-  <script src="./vendor/react-dom.development.js"></script>
-  <script src="./vendor/babel.min.js"></script>
+  <script src="vendor/react.development.js"></script>
+  <script src="vendor/react-dom.development.js"></script>
+  <script src="vendor/babel.min.js"></script>
+  <script src="data.js"></script>
   <script src="settings.js"></script>
-  <script src="./data.js"></script>
 </head>
 <body>
   <div id="root"></div>
   <script type="text/babel">
     const container = document.getElementById('root');
     const root = ReactDOM.createRoot(container);
-    root.render(<App images={images} />);
+    root.render(<App images={images} results={results}/>);
 
     const useGame = (images) => {
       const [stepsCount, setStepsCount] = React.useState(0);
@@ -33,28 +33,48 @@
         setStepsCount((step) => step + 1);
       }
 
-      const handleResetButtonClick = () => {
-        setFinishedCards([]);
-        setStepsCount(0);
-      }
-
       return {
         stepsCount,
         finishedCards,
-        handleResetButtonClick,
         checkCards,
         isWin,
       }
     }
 
-    function App({images = []}) {
+    function App({images = [], results = []}) {
+      const [result, setResult] = React.useState(0);
+      const [page, setPage] = React.useState(AppRoute.Game);
+      
+      const getPage = (page) => {
+        switch (page) {
+          case AppRoute.Game:
+            return (
+              <GamePage images={images} setResult={setResult} setPage={setPage} />
+            );
+          case AppRoute.Results:
+            return (
+              <ResultsPage result={result} setPage={setPage} results={results}/>
+            );
+          default:
+            return null;
+        }
+      }
+
+      return getPage(page);
+    }
+
+    function GamePage({images = [], setResult, setPage}) {
       const {
         stepsCount,
         finishedCards,
-        handleResetButtonClick,
         checkCards,
         isWin,
       } = useGame(images);
+
+      const handleResultsClick = () => {
+        setResult(stepsCount);
+        setPage(AppRoute.Results);
+      };
 
       return (
         <>
@@ -73,8 +93,8 @@
           {isWin && 
             (<Modal>
               <h3 className="modal-caption">Победа!</h3>
-              <p className="modal-description">Вы собрали все пары за {stepsCount} шагов</p>
-              <button className="button modal-button" type="button" onClick={handleResetButtonClick}>Новая игра</button>
+              <p className="modal-description">Теперь давайте узнаем результаты этой партии</p>
+              <button className="button modal-button" type="button" onClick={handleResultsClick}>Показать результаты</button>
             </Modal>)}
         </>
       )
@@ -159,6 +179,42 @@
             {children}
           </div>
         </div>
+      );
+    }
+
+    function ResultsPage({result, setPage, results}) {
+      const handleResetButtonClick = () => {
+        setPage(AppRoute.Game);
+      }
+
+      const sortedResults = [...results, { name: 'Ваш результат', stepsCount: result }].sort((a, b) => a.stepsCount - b.stepsCount);
+      const rows = sortedResults.map(({name, stepsCount}, index) => (
+        <tr className={`result-table-row ${name === 'Ваш результат' ? 'active' : ''}`}>
+          <td>{index}</td>
+          <td>{name}</td>
+          <td>{stepsCount}</td>
+        </tr>
+      ))
+
+      return (
+        <section className="result container">
+          <h2>Лучшие результаты:</h2>
+          <p>Вы завершили игру за <b>{result} шагов</b>, так держать!</p>
+          <table className="result-table">
+            <thead>
+            <tr className="result-table-row">
+              <th>Место</th>
+              <th>Имя</th>
+              <th>Шаги</th>
+            </tr>
+            </thead>
+            <tbody>
+            {rows}
+            </tbody>
+          </table>
+          <p>Хотите попробовать ещё раз?</p>
+          <button className="button result-button" type="button" onClick={handleResetButtonClick}>Новая игра</button>
+        </section>
       );
     }
   </script>
