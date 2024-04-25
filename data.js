@@ -86,8 +86,20 @@ const results = [
   { name: 'Петя', stepsCount: 19 }
 ];
 
-const getImages = (type) => {
-  // TODO: напишите код для формирования тематического набора данных
-  // TODO: напишите код для перемешивания данных
-  return [];
-};
+const getImages = (theme) => {
+  const pairs = imageCollection[theme].map((image) => ({
+    ...image,
+    id: `${image.id}-1`,
+  }));
+
+  const images = [...imageCollection[theme], ...pairs];
+
+  if (RANDOMIZED) {
+    for (let i = images.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1)); 
+      [images[i], images[j]] = [images[j], images[i]]; 
+    }
+  }
+
+  return images;
+}
