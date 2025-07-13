@@ -2,10 +2,12 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+const isProd = process.env.NODE_ENV === 'production';
+
 module.exports = {
   output: {
       path: path.resolve(__dirname, 'dist'),
-      publicPath: './',
+      publicPath: isProd ? './' : '/',
       filename: 'bundle.js',
   },
   entry: './src/index.js',
@@ -33,6 +35,8 @@ module.exports = {
       new CopyWebpackPlugin({
         patterns: [
             { from: 'public/styles', to: 'styles' },
+            { from: 'public/fonts', to: 'fonts' },
+            { from: 'public/img', to: 'img' },
         ],
     }),
   ],
