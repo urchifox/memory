@@ -1,12 +1,11 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-const isProd = process.env.NODE_ENV === 'production';
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   output: {
       path: path.resolve(__dirname, 'dist'),
-      publicPath: isProd ? '/memory/' : '/',
+      publicPath: './',
       filename: 'bundle.js',
   },
   entry: './src/index.js',
@@ -31,6 +30,11 @@ module.exports = {
       new HtmlWebpackPlugin({
           template: 'public/index.html',
       }),
+      new CopyWebpackPlugin({
+        patterns: [
+            { from: 'public/styles', to: 'styles' },
+        ],
+    }),
   ],
   devtool: 'inline-source-map',
   devServer: {
