@@ -1,4 +1,5 @@
 import React from "react";
+import { Image } from "../data";
 
 export function Card({
   id,
@@ -7,6 +8,13 @@ export function Card({
   isVisible,
   isFinished,
   onCardClick,
+}: {
+  id: Image["id"];
+  url: Image["url"];
+  description: Image["description"];
+  isVisible: boolean;
+  isFinished: boolean;
+  onCardClick: (id: Image["id"]) => void;
 }) {
   const className = `card ${isVisible ? "card-show" : ""} ${
     isFinished ? "card-finished" : ""

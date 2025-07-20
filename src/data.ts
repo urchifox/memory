@@ -1,5 +1,16 @@
 import { RANDOMIZED } from "./settings";
 
+type Theme = keyof typeof imageCollection;
+type Image = {
+  id: string;
+  url: string;
+  description: string;
+};
+type Result = {
+  name: string;
+  stepsCount: number;
+};
+
 const cats = [
   {
     id: "YdAqiUkUoWA",
@@ -103,7 +114,7 @@ const imageCollection = {
   flowers,
   cats,
   cars,
-};
+} as const;
 
 const results = [
   { name: "Аня", stepsCount: 16 },
@@ -111,7 +122,7 @@ const results = [
   { name: "Петя", stepsCount: 19 },
 ];
 
-const getImages = (theme) => {
+const getImages = (theme: Theme): Array<Image> => {
   const pairs = imageCollection[theme].map((image) => ({
     ...image,
     id: `${image.id}-1`,
@@ -129,4 +140,4 @@ const getImages = (theme) => {
   return images;
 };
 
-export { results, getImages };
+export { Theme, Image, Result, results, getImages };

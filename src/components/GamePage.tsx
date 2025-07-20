@@ -1,11 +1,22 @@
 import React from "react";
-import { Progress } from "./Progress.jsx";
-import { CardsList } from "./CardsList.jsx";
-import { Modal } from "./Modal.jsx";
-import { AppRoute } from "../settings.js";
-import { useGame } from "../use-game.js";
+import { Progress } from "./Progress";
+import { CardsList } from "./CardsList";
+import { Modal } from "./Modal";
+import { AppRoute } from "../settings";
+import { useGame } from "../use-game";
+import { Image, Theme } from "../data";
 
-export function GamePage({ theme, images = [], setResult, setPage }) {
+export function GamePage({
+  theme,
+  images = [],
+  setResult,
+  setPage,
+}: {
+  theme: Theme | null;
+  images: Array<Image>;
+  setResult: React.Dispatch<React.SetStateAction<number>>;
+  setPage: React.Dispatch<React.SetStateAction<AppRoute>>;
+}) {
   const { stepsCount, finishedCards, checkCards, isWin } = useGame(images);
 
   const handleResultsClick = () => {
