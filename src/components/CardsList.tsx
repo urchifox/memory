@@ -1,11 +1,24 @@
 import React from "react";
-import { Card } from "./Card.jsx";
-import { TIMEOUT } from "../settings.js";
+import { Card } from "./Card";
+import { TIMEOUT } from "../settings";
+import { Image, Theme } from "../data";
 
-export function CardsList({ theme, images, finishedCards, checkCards }) {
-  const [visibleCards, setVisibleCards] = React.useState([]);
+export function CardsList({
+  theme,
+  images,
+  finishedCards,
+  checkCards,
+}: {
+  theme: Theme | null;
+  images: Array<Image>;
+  finishedCards: Array<Image["id"]>;
+  checkCards: (firstId: Image["id"], secondId: Image["id"]) => void;
+}) {
+  const [visibleCards, setVisibleCards] = React.useState<Array<Image["id"]>>(
+    []
+  );
 
-  const handleCardClick = (id) => {
+  const handleCardClick = (id: Image["id"]) => {
     if (visibleCards.includes(id) || finishedCards.includes(id)) {
       return;
     }
@@ -16,7 +29,7 @@ export function CardsList({ theme, images, finishedCards, checkCards }) {
         break;
       case 1:
         setVisibleCards((cards) => [...cards, id]);
-        checkCards(...visibleCards, id);
+        checkCards(visibleCards[0], id);
         setTimeout(() => {
           setVisibleCards([]);
         }, TIMEOUT);

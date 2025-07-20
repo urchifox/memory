@@ -1,8 +1,17 @@
 import React from "react";
-import { AppRoute } from "../settings.js";
+import { AppRoute } from "../settings";
 import getDeclension from "@dubaua/get-declension";
+import { Result } from "../data";
 
-export function ResultsPage({ result, setPage, results }) {
+export function ResultsPage({
+  result,
+  setPage,
+  results,
+}: {
+  result: number;
+  setPage: React.Dispatch<React.SetStateAction<AppRoute>>;
+  results: Result[];
+}) {
   const handleResetButtonClick = () => {
     setPage(AppRoute.Initial);
   };

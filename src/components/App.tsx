@@ -1,22 +1,29 @@
 import React from "react";
-import { InitialPage } from "./InitialPage.jsx";
-import { GamePage } from "./GamePage.jsx";
-import { ResultsPage } from "./ResultsPage.jsx";
-import { AppRoute } from "../settings.js";
+import { InitialPage } from "./InitialPage";
+import { GamePage } from "./GamePage";
+import { ResultsPage } from "./ResultsPage";
+import { AppRoute } from "../settings";
+import { Theme, Image, Result } from "../data";
 
-export function App({ getImages, results = [] }) {
-  const [page, setPage] = React.useState(AppRoute.Initial);
-  const [theme, setTheme] = React.useState(null);
-  const [images, setImages] = React.useState([]);
+export function App({
+  getImages,
+  results = [],
+}: {
+  getImages: (theme: Theme) => Array<Image>;
+  results: Array<Result>;
+}) {
+  const [page, setPage] = React.useState<AppRoute>(AppRoute.Initial);
+  const [theme, setTheme] = React.useState<null | Theme>(null);
+  const [images, setImages] = React.useState<Array<Image>>([]);
   const [result, setResult] = React.useState(0);
 
-  const handleGameStart = (theme) => {
+  const handleGameStart = (theme: Theme) => {
     setTheme(theme);
     setImages(getImages(theme));
     setPage(AppRoute.Game);
   };
 
-  const getPage = (page) => {
+  const getPage = (page: AppRoute) => {
     switch (page) {
       case AppRoute.Initial:
         return <InitialPage onGameStart={handleGameStart} />;

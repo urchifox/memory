@@ -1,7 +1,12 @@
 import React from "react";
 import { AppTheme } from "../settings";
+import { Theme } from "../data";
 
-export function InitialPage({ onGameStart }) {
+export function InitialPage({
+  onGameStart,
+}: {
+  onGameStart: (theme: Theme) => void;
+}) {
   return (
     <section className="rules container">
       <h2>Добро пожаловать!</h2>

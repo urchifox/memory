@@ -1,6 +1,12 @@
 import React from "react";
 
-export function Progress({ finishedPairsAmount, pairsAmount }) {
+export function Progress({
+  finishedPairsAmount,
+  pairsAmount,
+}: {
+  finishedPairsAmount: number;
+  pairsAmount: number;
+}) {
   return (
     <>
       <div className="progress-wrapper">
